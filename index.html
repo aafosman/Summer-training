@@ -74,29 +74,34 @@
             font-weight: 700; cursor: pointer; transition: all 0.3s; width: 100%;
         }
         .btn-query:hover { background-color: #0a3d28; transform: translateY(-2px); }
+        
         #resultContainer { margin-top: 30px; display: none; text-align: right; }
+        
+        /* تنسيق بطاقة عرض البيانات الجديدة */
         .student-info-card {
-            background: #f8f9fa; border: 1px solid #e2e8f0;
-            padding: 20px; border-radius: 10px; margin-bottom: 15px;
+            background: #fdfdfd; border: 1px solid #e2e8f0;
+            padding: 25px 20px; border-radius: 10px; margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
         }
-        .info-row { margin-bottom: 12px; font-size: 16px; color: #333; font-weight: 500; display: flex; align-items: center; }
+        .info-row { margin-bottom: 18px; font-size: 16px; color: #333; display: flex; align-items: flex-start; }
         .info-row:last-child { margin-bottom: 0; }
-        .info-row i { color: #055934; width: 30px; font-size: 18px; text-align: center; }
+        .info-row i { color: #055934; width: 30px; font-size: 18px; text-align: center; margin-top: 3px; }
+        .info-row strong { color: #055934; margin-left: 8px; }
+        
         .zone-card {
             padding: 15px; border-radius: 10px; color: #ffffff;
             font-weight: 700; font-size: 18px; display: flex;
             align-items: center; justify-content: center; gap: 10px; text-align: center;
         }
-        .notes-area {
-            margin-top: 15px; background: #fdfcf0; border: 1px solid #C5A059;
-            padding: 15px; border-radius: 8px; font-size: 14px; color: #444; text-align: right;
-        }
+        
         .footer-legend {
             padding: 20px 40px; background: #f8f9fa; display: flex;
             flex-wrap: wrap; justify-content: center; gap: 20px; border-top: 1px solid #eee;
         }
         .legend-item { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #555; font-weight: 500; }
         .dot { width: 14px; height: 14px; border-radius: 50%; }
+        
+        /* ألوان النطاقات */
         .bg-red { background-color: #d93025; }
         .bg-yellow { background-color: #f9ab00; color: #000 !important; }
         .bg-green { background-color: #1e8e3e; }
@@ -129,19 +134,22 @@
             </div>
 
             <div id="resultContainer">
-                <div id="studentInfoCard" class="student-info-card" style="display:none;">
+                <div id="studentInfoCard" class="student-info-card">
                     <div class="info-row">
                         <i class="fa-solid fa-user-graduate"></i>
-                        <span><strong>اسم الطالب:</strong> <span id="dispName"></span></span>
+                        <div><strong>اسم الطالب:</strong> <span id="dispName"></span></div>
                     </div>
                     <div class="info-row">
                         <i class="fa-solid fa-chalkboard-user"></i>
-                        <span><strong>المشرف الأكاديمي:</strong> <span id="dispSupervisor"></span></span>
+                        <div><strong>المشرف الأكاديمي:</strong> <span id="dispSupervisor"></span></div>
+                    </div>
+                    <div class="info-row" id="notesRow" style="display:none;">
+                        <i class="fa-solid fa-note-sticky"></i>
+                        <div><strong>الملاحظات:</strong> <span id="dispNotes" style="color:#d93025; font-weight:bold;"></span></div>
                     </div>
                 </div>
 
                 <div id="zoneIndicator" class="zone-card"></div>
-                <div id="notesBox" class="notes-area"></div>
             </div>
         </div>
     </main>
@@ -161,15 +169,12 @@
     async function checkStatus() {
         const studentId = document.getElementById('studentId').value.trim();
         const container = document.getElementById('resultContainer');
-        const infoCard = document.getElementById('studentInfoCard');
         const indicator = document.getElementById('zoneIndicator');
-        const notesBox = document.getElementById('notesBox');
         const loading = document.getElementById('loading');
 
         if (!studentId) { alert("يرجى إدخال الرقم الأكاديمي"); return; }
 
         container.style.display = 'none';
-        infoCard.style.display = 'none';
         loading.style.display = 'block';
 
         try {
@@ -189,8 +194,16 @@
                 }
                 cols.push(col);
 
-                // تم تحديث ترتيب الأعمدة هنا:
-                // 0: الرقم | 1: الاسم | 2: النطاق | 3: المشرف | 4: الملاحظات
+                // ==========================================
+                // دليل الأعمدة (لتسهيل التعديل مستقبلاً):
+                // 0 = العمود الأول
+                // 1 = العمود الثاني
+                // 2 = العمود الثالث
+                // 3 = العمود الرابع
+                // 4 = العمود الخامس
+                // إذا كان اسم المشرف والملاحظات تظهر معكوسة، قم بتبديل الأرقام بين cols[3] و cols[4] أدناه
+                // ==========================================
+                
                 if (cols.length >= 4) {
                     const id = cols[0].replace(/["\r]/g, '').trim();
                     const sName = cols[1].replace(/["\r]/g, '').trim();
@@ -207,11 +220,11 @@
             }
 
             if (!found) {
+                document.getElementById('studentInfoCard').style.display = 'none';
                 indicator.className = 'zone-card';
                 indicator.style.backgroundColor = '#fce8e6';
                 indicator.style.color = '#c5221f';
                 indicator.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> الرقم الأكاديمي غير مسجل';
-                notesBox.style.display = 'none';
                 container.style.display = 'block';
             }
 
@@ -224,17 +237,26 @@
 
     function displayResult(name, supervisor, zone, notes) {
         const container = document.getElementById('resultContainer');
-        const infoCard = document.getElementById('studentInfoCard');
         const indicator = document.getElementById('zoneIndicator');
-        const notesBox = document.getElementById('notesBox');
+        const notesRow = document.getElementById('notesRow');
         
-        document.getElementById('dispName').innerText = name;
-        document.getElementById('dispSupervisor').innerText = supervisor;
-        infoCard.style.display = 'block';
+        // إظهار البطاقة وتعبئة البيانات
+        document.getElementById('studentInfoCard').style.display = 'block';
+        document.getElementById('dispName').innerText = name || 'غير متوفر';
+        document.getElementById('dispSupervisor').innerText = supervisor || 'غير متوفر';
+        
+        // إظهار الملاحظات فقط إذا كانت موجودة
+        if (notes && notes !== '') {
+            notesRow.style.display = 'flex';
+            document.getElementById('dispNotes').innerText = notes;
+        } else {
+            notesRow.style.display = 'none';
+        }
         
         container.style.display = 'block';
         indicator.className = 'zone-card';
 
+        // تحديد لون النطاق
         if (zone === 'أحمر') {
             indicator.classList.add('bg-red');
             indicator.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> النطاق الأحمر';
@@ -250,13 +272,6 @@
         } else {
             indicator.style.backgroundColor = '#eee'; indicator.style.color = '#333';
             indicator.innerHTML = 'مسجل - لم يحدد النطاق بعد';
-        }
-
-        if (notes && notes !== '') {
-            notesBox.style.display = 'block';
-            notesBox.innerHTML = '<strong>ملاحظات المشرف:</strong> ' + notes;
-        } else {
-            notesBox.style.display = 'none';
         }
     }
 </script>
