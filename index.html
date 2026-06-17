@@ -19,7 +19,6 @@
             align-items: center;
             font-family: 'Tajawal', sans-serif;
         }
-
         .main-container {
             width: 100%;
             max-width: 900px;
@@ -31,7 +30,6 @@
             display: flex;
             flex-direction: column;
         }
-
         .main-container::before {
             content: "";
             position: absolute;
@@ -39,7 +37,6 @@
             background: linear-gradient(135deg, #055934 0%, #0a3d28 100%);
             z-index: 0;
         }
-
         .main-container::after {
             content: "";
             position: absolute;
@@ -47,7 +44,6 @@
             background: #C5A059;
             z-index: 1;
         }
-
         .header-content {
             position: relative;
             z-index: 2;
@@ -58,128 +54,49 @@
             color: #ffffff;
             height: 160px;
         }
-
-        .titles-area {
-            text-align: right;
-        }
-
-        .titles-area h1 {
-            font-size: 28px; margin: 0; font-weight: 700;
-        }
-
-        .titles-area p {
-            font-size: 16px; margin: 8px 0 0; opacity: 0.9;
-        }
-
-        .logo-img {
-            height: 80px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
-            object-fit: contain;
-        }
-
-        .main-dashboard {
-            z-index: 2;
-            padding: 50px 40px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .search-card {
-            background: #ffffff;
-            width: 100%;
-            max-width: 500px;
-            text-align: center;
-        }
-
-        .search-card h2 {
-            color: #055934; font-size: 22px; margin-bottom: 25px;
-        }
-
+        .titles-area { text-align: right; }
+        .titles-area h1 { font-size: 28px; margin: 0; font-weight: 700; }
+        .titles-area p { font-size: 16px; margin: 8px 0 0; opacity: 0.9; }
+        .logo-img { height: 80px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); object-fit: contain; }
+        .main-dashboard { z-index: 2; padding: 50px 40px; display: flex; justify-content: center; }
+        .search-card { background: #ffffff; width: 100%; max-width: 500px; text-align: center; }
+        .search-card h2 { color: #055934; font-size: 22px; margin-bottom: 25px; }
         input[type="text"] {
-            width: 100%;
-            padding: 15px 20px;
-            font-size: 16px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            text-align: center;
-            font-family: 'Tajawal', sans-serif;
-            transition: all 0.3s;
-            margin-bottom: 20px;
+            width: 100%; padding: 15px 20px; font-size: 16px;
+            border: 2px solid #e2e8f0; border-radius: 10px;
+            text-align: center; font-family: 'Tajawal', sans-serif;
+            transition: all 0.3s; margin-bottom: 20px;
         }
-
-        input[type="text"]:focus {
-            border-color: #C5A059;
-            outline: none;
-            box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.1);
-        }
-
+        input[type="text"]:focus { border-color: #C5A059; outline: none; box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.1); }
         .btn-query {
-            background-color: #055934;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            width: 100%;
+            background-color: #055934; color: white; border: none;
+            padding: 15px 30px; border-radius: 10px; font-size: 18px;
+            font-weight: 700; cursor: pointer; transition: all 0.3s; width: 100%;
         }
-
-        .btn-query:hover {
-            background-color: #0a3d28;
-            transform: translateY(-2px);
+        .btn-query:hover { background-color: #0a3d28; transform: translateY(-2px); }
+        #resultContainer { margin-top: 30px; display: none; text-align: right; }
+        .student-info-card {
+            background: #f8f9fa; border: 1px solid #e2e8f0;
+            padding: 20px; border-radius: 10px; margin-bottom: 15px;
         }
-
-        #resultContainer {
-            margin-top: 30px;
-            display: none;
-        }
-
+        .info-row { margin-bottom: 12px; font-size: 16px; color: #333; font-weight: 500; display: flex; align-items: center; }
+        .info-row:last-child { margin-bottom: 0; }
+        .info-row i { color: #055934; width: 30px; font-size: 18px; text-align: center; }
         .zone-card {
-            padding: 15px;
-            border-radius: 10px;
-            color: #ffffff;
-            font-weight: 700;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            padding: 15px; border-radius: 10px; color: #ffffff;
+            font-weight: 700; font-size: 18px; display: flex;
+            align-items: center; justify-content: center; gap: 10px; text-align: center;
         }
-
         .notes-area {
-            margin-top: 15px;
-            background: #fdfcf0;
-            border: 1px solid #C5A059;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 14px;
-            color: #444;
-            text-align: right;
+            margin-top: 15px; background: #fdfcf0; border: 1px solid #C5A059;
+            padding: 15px; border-radius: 8px; font-size: 14px; color: #444; text-align: right;
         }
-
         .footer-legend {
-            padding: 20px 40px;
-            background: #f8f9fa;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            border-top: 1px solid #eee;
+            padding: 20px 40px; background: #f8f9fa; display: flex;
+            flex-wrap: wrap; justify-content: center; gap: 20px; border-top: 1px solid #eee;
         }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            color: #555;
-            font-weight: 500;
-        }
-
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #555; font-weight: 500; }
         .dot { width: 14px; height: 14px; border-radius: 50%; }
-
         .bg-red { background-color: #d93025; }
         .bg-yellow { background-color: #f9ab00; color: #000 !important; }
         .bg-green { background-color: #1e8e3e; }
@@ -195,7 +112,8 @@
             <p>التدريب التطبيقي 1447هـ - 1448 هـ</p>
         </div>
         <div>
-            <img src="logo.jfif" alt="شعار الكلية" class="logo-img">        </div>
+            <img src="logo.jfif" alt="شعار الكلية" class="logo-img">
+        </div>
     </header>
 
     <main class="main-dashboard">
@@ -203,7 +121,7 @@
             <h2>استعلام حالة الطالب</h2>
             <input type="text" id="studentId" placeholder="أدخل الرقم الأكاديمي">
             <button class="btn-query" onclick="checkStatus()">
-                <i class="fa-solid fa-magnifying-glass"></i> عرض النطاق
+                <i class="fa-solid fa-magnifying-glass"></i> عرض البيانات
             </button>
 
             <div id="loading" style="display:none; margin-top:20px; color:#666; font-size:14px;">
@@ -211,6 +129,17 @@
             </div>
 
             <div id="resultContainer">
+                <div id="studentInfoCard" class="student-info-card" style="display:none;">
+                    <div class="info-row">
+                        <i class="fa-solid fa-user-graduate"></i>
+                        <span><strong>اسم الطالب:</strong> <span id="dispName"></span></span>
+                    </div>
+                    <div class="info-row">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                        <span><strong>المشرف الأكاديمي:</strong> <span id="dispSupervisor"></span></span>
+                    </div>
+                </div>
+
                 <div id="zoneIndicator" class="zone-card"></div>
                 <div id="notesBox" class="notes-area"></div>
             </div>
@@ -226,21 +155,21 @@
 </div>
 
 <script>
+    // ضع رابط جوجل شيت المنشور (CSV) هنا
     const sheetDataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRSORepMr-6bAomcs1Myh3qsrHPg9ks06TN1qZ9840GRo-fsLX2xQt7__kTgamr57mY82MaRWnOuAQ0/pub?gid=216850767&single=true&output=csv';
 
     async function checkStatus() {
         const studentId = document.getElementById('studentId').value.trim();
         const container = document.getElementById('resultContainer');
+        const infoCard = document.getElementById('studentInfoCard');
         const indicator = document.getElementById('zoneIndicator');
         const notesBox = document.getElementById('notesBox');
         const loading = document.getElementById('loading');
 
-        if (!studentId) {
-            alert("يرجى إدخال الرقم الأكاديمي");
-            return;
-        }
+        if (!studentId) { alert("يرجى إدخال الرقم الأكاديمي"); return; }
 
         container.style.display = 'none';
+        infoCard.style.display = 'none';
         loading.style.display = 'block';
 
         try {
@@ -260,13 +189,17 @@
                 }
                 cols.push(col);
 
-                if (cols.length >= 3) {
+                // تم تحديث ترتيب الأعمدة هنا:
+                // 0: الرقم | 1: الاسم | 2: النطاق | 3: المشرف | 4: الملاحظات
+                if (cols.length >= 4) {
                     const id = cols[0].replace(/["\r]/g, '').trim();
+                    const sName = cols[1].replace(/["\r]/g, '').trim();
                     const zone = cols[2].replace(/["\r]/g, '').trim();
-                    const notes = cols.length >= 4 ? cols[3].replace(/["\r]/g, '').trim() : '';
+                    const sSupervisor = cols[3].replace(/["\r]/g, '').trim();
+                    const notes = cols.length >= 5 ? cols[4].replace(/["\r]/g, '').trim() : '';
 
                     if (id === studentId) {
-                        displayResult(zone, notes);
+                        displayResult(sName, sSupervisor, zone, notes);
                         found = true;
                         break;
                     }
@@ -289,10 +222,15 @@
         }
     }
 
-    function displayResult(zone, notes) {
+    function displayResult(name, supervisor, zone, notes) {
         const container = document.getElementById('resultContainer');
+        const infoCard = document.getElementById('studentInfoCard');
         const indicator = document.getElementById('zoneIndicator');
         const notesBox = document.getElementById('notesBox');
+        
+        document.getElementById('dispName').innerText = name;
+        document.getElementById('dispSupervisor').innerText = supervisor;
+        infoCard.style.display = 'block';
         
         container.style.display = 'block';
         indicator.className = 'zone-card';
