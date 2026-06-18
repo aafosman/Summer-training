@@ -9,26 +9,45 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
     <style>
-        * { box-sizing: border-box; }
-        body {
-            background-color: #f0f2f5;
-            margin: 0;
-            padding: 20px;
-            font-family: 'Tajawal', sans-serif;
-            display: flex;
-            justify-content: center;
+        /* تعريف متغيرات الألوان للوضع الفاتح والليلي */
+        :root {
+            --bg-body: #f0f2f5;
+            --bg-card: #ffffff;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --border-color: #e2e8f0;
+            --controls-bg: #f8f9fa;
         }
+
+        [data-theme="dark"] {
+            --bg-body: #121212;
+            --bg-card: #1e1e1e;
+            --text-main: #f5f5f5;
+            --text-muted: #aaaaaa;
+            --border-color: #333333;
+            --controls-bg: #2d2d2d;
+        }
+
+        * { box-sizing: border-box; transition: background-color 0.3s, color 0.3s; }
+        
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0; padding: 20px;
+            font-family: 'Tajawal', sans-serif;
+            display: flex; justify-content: center;
+        }
+
         .dashboard-container {
-            width: 100%;
-            max-width: 1200px;
-            background-color: #ffffff;
+            width: 100%; max-width: 1200px;
+            background-color: var(--bg-card);
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-            position: relative;
+            overflow: hidden; position: relative;
         }
+
         .dashboard-container::before {
             content: ""; position: absolute; top: 0; left: 0; right: 0; height: 120px;
             background: linear-gradient(135deg, #055934 0%, #0a3d28 100%); z-index: 0;
@@ -37,33 +56,50 @@
             content: ""; position: absolute; top: 120px; left: 0; right: 0; height: 6px;
             background: #C5A059; z-index: 1;
         }
+
         .header-content {
             position: relative; z-index: 2; padding: 20px 40px;
             display: flex; justify-content: space-between; align-items: center;
             color: #ffffff; height: 120px;
         }
-        .titles-area h1 { font-size: 26px; margin: 0; font-weight: 700; }
-        .titles-area p { font-size: 15px; margin: 5px 0 0; opacity: 0.9; }
+        .titles-area h1 { font-size: 26px; margin: 0; font-weight: 700; color: white; }
+        .titles-area p { font-size: 15px; margin: 5px 0 0; opacity: 0.9; color: white; }
         .logo-img { height: 70px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
         
-        .main-content {
-            padding: 40px;
-            position: relative;
-            z-index: 2;
+        .main-content { padding: 40px; position: relative; z-index: 2; }
+
+        /* أزرار الإجراءات (تصدير، طباعة، وضع ليلي) */
+        .actions-toolbar {
+            display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 20px;
         }
+        .btn-action {
+            background: var(--controls-bg); color: var(--text-main);
+            border: 1px solid var(--border-color); padding: 10px 15px;
+            border-radius: 8px; cursor: pointer; font-family: 'Tajawal'; font-weight: 600;
+            display: flex; align-items: center; gap: 8px; font-size: 14px;
+        }
+        .btn-action:hover { filter: brightness(0.9); }
+        .btn-action.btn-export { background: #1e8e3e; color: white; border: none; }
+        .btn-action.btn-print { background: #34495e; color: white; border: none; }
 
         .controls-area {
-            background: #f8f9fa; border: 1px solid #e2e8f0;
+            background: var(--controls-bg); border: 1px solid var(--border-color);
             padding: 20px; border-radius: 10px; margin-bottom: 30px;
             display: flex; justify-content: space-between; align-items: center;
         }
         .controls-area label { font-size: 18px; font-weight: 700; color: #055934; margin-left: 15px; }
         .controls-area select {
-            padding: 12px 20px; font-size: 16px; border: 2px solid #ccc;
+            padding: 12px 20px; font-size: 16px; border: 2px solid var(--border-color);
             border-radius: 8px; font-family: 'Tajawal', sans-serif;
             min-width: 300px; cursor: pointer; outline: none;
+            background: var(--bg-card); color: var(--text-main);
         }
-        .controls-area select:focus { border-color: #055934; }
+
+        /* حركات الدخول */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
         .stats-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -72,12 +108,20 @@
         .stat-card {
             padding: 20px; border-radius: 12px; text-align: center; color: white;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: relative; overflow: hidden;
+            animation: slideUp 0.6s ease forwards; opacity: 0;
         }
+        /* تأخير بسيط لكل بطاقة */
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+        .stat-card:nth-child(5) { animation-delay: 0.5s; }
+        .stat-card:nth-child(6) { animation-delay: 0.6s; }
+
         .stat-card h3 { margin: 0 0 10px 0; font-size: 18px; font-weight: 500; }
         .stat-card .number { font-size: 36px; font-weight: 800; margin: 0; }
         .stat-card .percentage { font-size: 14px; opacity: 0.9; margin-top: 5px; font-weight: 500; }
         
-        /* ألوان البطاقات */
         .card-total { background: #34495e; }
         .card-gold { background: #C5A059; border: 2px solid #a88440; }
         .card-green { background: #1e8e3e; }
@@ -87,11 +131,23 @@
 
         .chart-container {
             width: 100%; max-width: 500px; margin: 0 auto;
-            background: white; padding: 20px; border-radius: 15px;
-            border: 1px solid #eee; box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+            background: var(--bg-card); padding: 20px; border-radius: 15px;
+            border: 1px solid var(--border-color);
+            animation: slideUp 0.8s ease forwards;
         }
 
-        #loading { text-align: center; font-size: 18px; color: #666; margin: 40px 0; }
+        #loading { text-align: center; font-size: 18px; color: var(--text-muted); margin: 40px 0; }
+
+        /* تنسيق خاص للطباعة (يخفي الأزرار ويجهز الورقة) */
+        @media print {
+            body { background: white; padding: 0; }
+            .dashboard-container { box-shadow: none; max-width: 100%; }
+            .actions-toolbar, .controls-area select, .controls-area label { display: none !important; }
+            .controls-area { border: none; padding: 0; margin-bottom: 20px; background: transparent; }
+            .controls-area::after { content: "تقرير مطبوع - التدريب التطبيقي"; font-weight: bold; font-size: 18px; }
+            .chart-container { border: none; box-shadow: none; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
     </style>
 </head>
 <body>
@@ -108,6 +164,18 @@
     </header>
 
     <div class="main-content">
+        <div class="actions-toolbar" id="actionsToolbar" style="display:none;">
+            <button class="btn-action" onclick="toggleTheme()" title="تغيير المظهر">
+                <i class="fa-solid fa-moon" id="themeIcon"></i>
+            </button>
+            <button class="btn-action btn-export" onclick="exportDataToCSV()">
+                <i class="fa-solid fa-file-excel"></i> تصدير البيانات (Excel)
+            </button>
+            <button class="btn-action btn-print" onclick="window.print()">
+                <i class="fa-solid fa-print"></i> طباعة / تقرير PDF
+            </button>
+        </div>
+
         <div id="loading"><i class="fa-solid fa-circle-notch fa-spin"></i> جاري استيراد وتحليل البيانات...</div>
         
         <div id="dashboardWrapper" style="display:none;">
@@ -116,10 +184,10 @@
                     <label for="supervisorFilter"><i class="fa-solid fa-filter"></i> تصفية حسب المشرف:</label>
                     <select id="supervisorFilter" onchange="updateDashboard()">
                         <option value="all">جميع المشرفين (كل الطلاب)</option>
-                        </select>
+                    </select>
                 </div>
-                <div style="color:#666; font-size:14px;">
-                    <i class="fa-solid fa-clock-rotate-left"></i> تحديث مباشر
+                <div style="color:var(--text-muted); font-size:14px;">
+                    <i class="fa-solid fa-clock-rotate-left"></i> بيانات محدثة لحظياً
                 </div>
             </div>
 
@@ -164,20 +232,19 @@
 </div>
 
 <script>
+    // الرابط المباشر لجوجل شيت
     const sheetDataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRSORepMr-6bAomcs1Myh3qsrHPg9ks06TN1qZ9840GRo-fsLX2xQt7__kTgamr57mY82MaRWnOuAQ0/pub?gid=216850767&single=true&output=csv';
     
-    let allStudentsData = []; // لتخزين جميع البيانات
-    let myChart = null; // كائن الرسم البياني
+    let allStudentsData = []; 
+    let myChart = null;
 
-    // الدالة الرئيسية التي تعمل عند فتح الصفحة
     async function initDashboard() {
         try {
             const response = await fetch(sheetDataUrl + '&t=' + new Date().getTime());
             const data = await response.text();
             
-            // معالجة البيانات من CSV
             const rows = data.split('\n');
-            let supervisorsSet = new Set(); // لاستخراج أسماء المشرفين بدون تكرار
+            let supervisorsSet = new Set();
 
             for (let i = 1; i < rows.length; i++) {
                 let cols = [];
@@ -190,15 +257,14 @@
                 }
                 cols.push(col);
 
-                // ترتيب الأعمدة: 0(رقم)، 1(اسم)، 2(نطاق)، 3(مشرف)
+                // استخراج الرقم والاسم لتصدير البيانات
                 if (cols.length >= 4 && cols[0].trim() !== '') {
+                    const id = cols[0].replace(/["\r]/g, '').trim();
+                    const sName = cols[1].replace(/["\r]/g, '').trim();
                     const zone = cols[2].replace(/["\r]/g, '').trim();
                     const supervisor = cols[3].replace(/["\r]/g, '').trim() || 'بدون مشرف';
                     
-                    allStudentsData.push({
-                        zone: zone,
-                        supervisor: supervisor
-                    });
+                    allStudentsData.push({ id, name: sName, zone, supervisor });
                     
                     if(supervisor !== 'بدون مشرف') {
                         supervisorsSet.add(supervisor);
@@ -206,39 +272,31 @@
                 }
             }
 
-            // تعبئة القائمة المنسدلة بأسماء المشرفين
             const supervisorSelect = document.getElementById('supervisorFilter');
             supervisorsSet.forEach(sup => {
                 let option = document.createElement('option');
-                option.value = sup;
-                option.text = sup;
+                option.value = sup; option.text = sup;
                 supervisorSelect.appendChild(option);
             });
 
-            // إخفاء التحميل وعرض اللوحة
             document.getElementById('loading').style.display = 'none';
             document.getElementById('dashboardWrapper').style.display = 'block';
+            document.getElementById('actionsToolbar').style.display = 'flex';
 
-            // تحديث البيانات وعرضها لأول مرة (الكل)
             updateDashboard();
-
         } catch (error) {
-            console.error(error);
             document.getElementById('loading').innerHTML = '<span style="color:red;">حدث خطأ في تحميل البيانات. يرجى المحاولة لاحقاً.</span>';
         }
     }
 
-    // دالة تحديث الأرقام والرسم البياني بناءً على الفلتر
     function updateDashboard() {
         const selectedSupervisor = document.getElementById('supervisorFilter').value;
         
-        // تصفية البيانات
         let filteredData = allStudentsData;
         if (selectedSupervisor !== 'all') {
             filteredData = allStudentsData.filter(student => student.supervisor === selectedSupervisor);
         }
 
-        // حساب الأعداد
         const total = filteredData.length;
         let counts = { gold: 0, green: 0, yellow: 0, red: 0, unknown: 0 };
 
@@ -247,44 +305,36 @@
             else if (student.zone === 'أخضر') counts.green++;
             else if (student.zone === 'أصفر') counts.yellow++;
             else if (student.zone === 'أحمر') counts.red++;
-            else counts.unknown++; // غير محدد
+            else counts.unknown++;
         });
 
-        // دوال مساعدة لحساب النسبة المئوية
         const calcPct = (num, tot) => tot === 0 ? 0 : Math.round((num / tot) * 100);
 
-        // تحديث البطاقات
         document.getElementById('countTotal').innerText = total;
-        
         document.getElementById('countGold').innerText = counts.gold;
         document.getElementById('pctGold').innerText = calcPct(counts.gold, total) + '%';
-        
         document.getElementById('countGreen').innerText = counts.green;
         document.getElementById('pctGreen').innerText = calcPct(counts.green, total) + '%';
-        
         document.getElementById('countYellow').innerText = counts.yellow;
         document.getElementById('pctYellow').innerText = calcPct(counts.yellow, total) + '%';
-        
         document.getElementById('countRed').innerText = counts.red;
         document.getElementById('pctRed').innerText = calcPct(counts.red, total) + '%';
-        
         document.getElementById('countUnknown').innerText = counts.unknown;
         document.getElementById('pctUnknown').innerText = calcPct(counts.unknown, total) + '%';
 
-        // تحديث الرسم البياني
         drawChart(counts.gold, counts.green, counts.yellow, counts.red, counts.unknown);
     }
 
-    // دالة رسم المخطط البياني باستخدام Chart.js
     function drawChart(gold, green, yellow, red, unknown) {
         const ctx = document.getElementById('zonesChart').getContext('2d');
-        
-        // مسح الرسم القديم إن وجد لتحديثه
-        if (myChart) {
-            myChart.destroy();
-        }
+        if (myChart) myChart.destroy();
+
+        // لون الخطوط حسب الوضع الليلي/الفاتح
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const textColor = isDark ? '#e4e6eb' : '#666';
 
         Chart.defaults.font.family = 'Tajawal';
+        Chart.defaults.color = textColor;
         
         myChart = new Chart(ctx, {
             type: 'doughnut',
@@ -292,31 +342,19 @@
                 labels: ['الذهبي', 'الأخضر', 'الأصفر', 'الأحمر', 'غير محدد'],
                 datasets: [{
                     data: [gold, green, yellow, red, unknown],
-                    backgroundColor: [
-                        '#C5A059', // ذهبي
-                        '#1e8e3e', // أخضر
-                        '#f9ab00', // أصفر
-                        '#d93025', // أحمر
-                        '#9e9e9e'  // رمادي (غير محدد)
-                    ],
+                    backgroundColor: ['#C5A059', '#1e8e3e', '#f9ab00', '#d93025', '#9e9e9e'],
                     borderWidth: 2,
-                    borderColor: '#ffffff'
+                    borderColor: isDark ? '#1e1e1e' : '#ffffff'
                 }]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: '65%', // حجم الدائرة الداخلية
+                responsive: true, maintainAspectRatio: false, cutout: '65%',
                 plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: { font: { size: 14, family: 'Tajawal' }, padding: 20 }
-                    },
+                    legend: { position: 'bottom', labels: { font: { size: 14, family: 'Tajawal' }, padding: 20 } },
                     tooltip: {
                         callbacks: {
                             label: function(context) {
-                                let label = context.label || '';
-                                let value = context.raw;
+                                let label = context.label || ''; let value = context.raw;
                                 let total = context.chart._metasets[context.datasetIndex].total;
                                 let percentage = Math.round((value / total) * 100) + '%';
                                 return label + ': ' + value + ' طالب (' + percentage + ')';
@@ -328,7 +366,47 @@
         });
     }
 
-    // تشغيل الدالة الرئيسية عند تحميل الصفحة
+    // --- الوظائف الجديدة --- //
+
+    // 1. تبديل الوضع الليلي
+    function toggleTheme() {
+        const html = document.documentElement;
+        const icon = document.getElementById('themeIcon');
+        const isDark = html.getAttribute('data-theme') === 'dark';
+        
+        if (isDark) {
+            html.removeAttribute('data-theme');
+            icon.className = 'fa-solid fa-moon';
+        } else {
+            html.setAttribute('data-theme', 'dark');
+            icon.className = 'fa-solid fa-sun';
+        }
+        updateDashboard(); // لتحديث ألوان الرسم البياني
+    }
+
+    // 2. تصدير البيانات إلى Excel / CSV
+    function exportDataToCSV() {
+        const selectedSupervisor = document.getElementById('supervisorFilter').value;
+        let filteredData = selectedSupervisor === 'all' ? allStudentsData : allStudentsData.filter(s => s.supervisor === selectedSupervisor);
+        
+        // استخدام uFEFF لدعم ترميز اللغة العربية (UTF-8 BOM) في الإكسل
+        let csvContent = "\uFEFFالرقم الأكاديمي,اسم الطالب,النطاق,المشرف الأكاديمي\n";
+        
+        filteredData.forEach(row => {
+            csvContent += `${row.id},${row.name},${row.zone},${row.supervisor}\n`;
+        });
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        
+        link.setAttribute("href", url);
+        link.setAttribute("download", `تقرير_التدريب_${selectedSupervisor === 'all' ? 'الكل' : selectedSupervisor}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
     window.onload = initDashboard;
 </script>
 
